@@ -1,0 +1,20 @@
+import JWT from "jsonwebtoken";
+import { prismaClient } from "../clients/db/index.js";
+import type { User } from "../../generated/prisma/index.js";
+
+const JWT_SECRET = "$uper@1234.";
+
+class JWTService {
+  public static generateTokenForUser(user: User) {
+    const payload = {
+      id: user?.id,
+      email: user?.email,
+    };
+
+    const token = JWT.sign(payload, JWT_SECRET);
+
+    return token;
+  }
+}
+
+export default JWTService;
