@@ -4,6 +4,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import bodyParser from "body-parser";
 import { User } from "./user/index.js";
+import { Tweet } from "./tweet/index.js";
 import type { GraphqlContext } from "../interfaces.js";
 import JWTService from "../services/jwt.js";
 
@@ -17,14 +18,25 @@ export async function initServer() {
     //typedefs is like schema to tell graphql what query and mutation are we using.
     typeDefs: `
     ${User.types}
+    ${Tweet.types}
         type Query {
           ${User.queries}
+          ${Tweet.queries}
+        }
+        type Mutation {
+          ${Tweet.mutations}
         }
     `,
     resolvers: {
       Query: {
         ...User.resolvers.queries,
+        ...Tweet.resolvers.queries,
       },
+      Mutation: {
+        ...Tweet.resolvers.mutations,
+      },
+      ...Tweet.resolvers.extraResolvers,
+      ...User.resolvers.extraResolvers,
     },
   });
 
